@@ -1,5 +1,6 @@
 import React from "react";
 import './Chessboard.css';
+import { generateTileIDs } from "../../assets/scripts/generateTiles";
 
 const axisY = Array.from({ length: 9 }, (_, key) => key++).splice(1).reverse();
 const axisX = 'abcdefgh'.split('');
