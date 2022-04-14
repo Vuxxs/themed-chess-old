@@ -1,0 +1,36 @@
+#board {
+    background-color: rgba(40, 40, 40);
+    display: flex;
+    justify-content: space-between;
+
+    /* Responsive Width & Height */
+    width: 75vh;
+    height: 75vh;
+
+    /* Center the chessboard */
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.tiles {
+    /* Divided by 8 */
+    width: 9.37500vh;
+    height: 9.37500vh;
+
+    /* Super important for the tile placement */
+    position: absolute;
+}
+
+.white {
+    color: white;
+    background-color: rgb(230, 230, 230);
+}
+
+.black {
+    color: gray;
+    background-color: black;
+}

@@ -1,0 +1,11 @@
+html,
+body {
+  background-color: gray;
+
+  display: grid;
+  align-items: center;
+  justify-content: center;
+
+  /* Disable scrolling */
+  overflow: hidden
+}
