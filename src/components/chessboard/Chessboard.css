@@ -25,6 +25,11 @@
     position: absolute;
 }
 
+.highlighted {
+    background-color: blue;
+    z-index: 1000;
+}
+
 .white {
     background-color: rgb(255, 220, 120);
 }
@@ -35,8 +40,6 @@
 
 .pieces {
     z-index: 9999;
-    top: 0;
-    left: 0;
 }
 
 /* Generated with generateTileCSS() */
