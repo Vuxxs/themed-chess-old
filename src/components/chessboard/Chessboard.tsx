@@ -1,15 +1,36 @@
-import React from "react";
 import './Chessboard.css';
-import { generateTileIDs } from "../../assets/scripts/generateTiles";
+import { generateTileIDs, axisX, axisY } from '../../assets/scripts/generateTiles';
+const tiles = generateTileIDs();
 
-const axisY = Array.from({ length: 9 }, (_, key) => key++).splice(1).reverse();
-const axisX = 'abcdefgh'.split('');
+function calculateFenPosition(FEN: Array<String>) {
+    let x_counter = 0;
+    let y_counter = 7;
+
+    const positions = [];
+
+    for (const fin in FEN) {
+        if (FEN[fin] === "/") {
+            positions.push("");
+            y_counter--;
+            x_counter = 0;
+        } else {
+            positions.push(`${axisX[x_counter]}${axisY[y_counter]}`);
+            x_counter++;
+        }
+    }
+
+    return positions;
+}
 
 function setPieces() {
     // Starting FEN value for a chess game.
-    const FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR".split('');
+    const FEN = "rnbqkbnr/pppppppp/////PPPPPPPP/RNBQKBNR".split('');
 
-    const piecesDictionary: { [key: string]: string } = {
+    interface piecesSign {
+        [key: string]: string | undefined
+    }
+
+    const piecesDic: piecesSign = {
         p: "pawn",
         r: "rook",
         n: "knight",
@@ -17,32 +38,23 @@ function setPieces() {
         q: "queen",
         k: "king"
     };
+
     const pieces = [];
 
-    let counterX = 0;
-    let counterY = 8;
+    const positions = calculateFenPosition(FEN);
+
     for (const index in FEN) {
+        if (positions[index] === "") continue;
+        const color =
+            (FEN[index] === FEN[index].toUpperCase()) ? "white" : "black";
 
-        const place = FEN[index];
-        const pieceID = (axisX[counterX] + axisY[counterY]).toString()
-        counterX++;
+        const place = FEN[index].toLowerCase();
 
-        if (place === "/") {
-            counterY--;
-            counterX = 8;
-        } else {
-            let pieceColor = "";
-            if (place === place.toUpperCase()) {
-                pieceColor = "white";
-            } else {
-                pieceColor = "black";
-            }
-
-            pieces.push(<a
-                className={pieceID}
-            >{piecesDictionary[place]}</a>
-            );
-        }
+        pieces.push(
+            <img
+                src={require(`./../../assets/images/pieces/${color}/${piecesDic[place]}.png`)}
+                className={`tiles pieces ${positions[index]}`} />
+        );
     }
     return pieces;
 }
@@ -50,32 +62,21 @@ function setPieces() {
 function setTiles() {
 
     const board = [];
-    let leftSpacing = 0;
-    let color;
+    let color = "black";
 
-    for (const x in axisX) {
+    const revClr = () => {
+        (color === "white") ? color = "black" : color = "white";
+    }
 
-        (parseInt(x) % 2) ? color = "black" : color = "white";
-        let topSpacing = 0;
-        for (const y in axisY) {
-            const tileID = (axisX[x] + axisY[y]).toString();
-            board.push(
-                <a
-                    style={{
-                        left: `${leftSpacing}%`,
-                        top: `${topSpacing}%`
-                    }}
-                    className={`tiles ${color} ${tileID}`} />
-            );
-
-            (color === "black") ? color = "white" : color = "black";
-
-            // Same thing as below
-            topSpacing += 12.5;
+    for (const tile in tiles) {
+        revClr();
+        const tileID = tiles[tile];
+        board.push(
+            <a className={`tiles ${color} ${tileID}`} />
+        );
+        if (tileID.endsWith('1')) {
+            revClr();
         }
-
-        // 100(%) space / 8 tiles per space
-        leftSpacing += 12.5;
     }
     return board;
 }
@@ -85,8 +86,8 @@ export default function Chessboard() {
     const pieces = setPieces();
     return (
         <div id="board">
-            <a>{board}</a>
-            <a>{pieces}</a>
+            <div>{board}</div>
+            <div>{pieces}</div>
         </div>
     );
 }
